@@ -17,7 +17,7 @@ set -e
 
 CUDA_REPO="10.2.89-1"
 SDL2_VER="2.0.12"
-NASM_VER="2.14.02"
+NASM_VER="2.15.05"
 LAME_VER="3.100"
 OPUS_VER="1.3.1"
 LIBOGG_VER="1.3.4"
@@ -244,13 +244,22 @@ sleep 2
 
 #Install YASM
 cd ${CHAN_DIR}
-git clone --depth 1 git://github.com/yasm/yasm.git
-cd yasm
-autoreconf -fiv
+#git clone --depth 1 git://github.com/yasm/yasm.git
+#cd yasm
+#autoreconf -fiv
+#./configure --prefix="${DEST_DIR}" --bindir="${BIND_DIR}"
+#make
+#make install
+#make distclean
+
+curl -O -L https://www.tortall.net/projects/yasm/releases/yasm-1.3.0.tar.gz
+tar xzvf yasm-1.3.0.tar.gz
+cd yasm-1.3.0
 ./configure --prefix="${DEST_DIR}" --bindir="${BIND_DIR}"
 make
 make install
 make distclean
+
 
 echo " "
 echo -e $YELLOW"YASM Installation Completed"$RESET
@@ -289,8 +298,8 @@ sleep 2
 
 #Install X265
 cd ${CHAN_DIR}
-hg clone http://hg.videolan.org/x265
-cd x265/build/linux
+git clone --branch stable --depth 2 https://bitbucket.org/multicoreware/x265_git
+cd x265_git/build/linux
 cmake -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="${DEST_DIR}" -DENABLE_SHARED:bool=off ../../source
 make
 make install
