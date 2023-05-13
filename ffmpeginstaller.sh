@@ -311,35 +311,7 @@ echo -e $YELLOW"X265 Installation Completed"$RESET
 echo " "
 sleep 2
 }
-
-function AOM_INSTALL
-{
-echo " "
-echo -e $GREEN"Starting AOM Installation"$RESET
-echo " "
-sleep 2
-
-#Install AOM
-cd ${CHAN_DIR}
-git clone https://aomedia.googlesource.com/aom
-mkdir -p aom/aom_build
-cd aom/aom_build
-cmake3 -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="${DEST_DIR}" -DCONFIG_AV1_ENCODER=0 -DENABLE_NASM=on ../../aom
-make
-make install
-
-rm -rf /usr/local/bin/aomdec
-rm -rf /usr/local/bin/aomenc
-
-ln -s /usr/local/ffmpeg/bin/aomdec /usr/local/bin/aomdec
-ln -s /usr/local/ffmpeg/bin/aomenc /usr/local/bin/aomenc
-
-echo " "
-echo -e $YELLOW"AOM Installation Completed"$RESET
-echo " "
-sleep 2
-}
-
+ 
 function FDKACC_INSTALL
 {
 echo " "
@@ -526,29 +498,6 @@ echo " "
 sleep 2
 }
 
-function ZIMG_INSTALL
-{
-echo " "
-echo -e $GREEN"Starting ZIMG Installation"$RESET
-echo " "
-sleep 2
-
-#Install ZIMG
-#cd ${CHAN_DIR}
-#git clone --depth=1 https://github.com/sekrit-twc/zimg
-#cd zimg
-#./autogen.sh
-#./configure --prefix="${DEST_DIR}" --bindir="${BIND_DIR}" --disable-shared --with-pic
-#make
-#make install
-#make distclean
-
-echo " "
-echo -e $YELLOW"ZIMG Installation Completed"$RESET
-echo " "
-sleep 2
-}
-
 function FFMPEG_INSTALL
 {
 echo " "
@@ -556,10 +505,12 @@ echo -e $GREEN"Starting FFMPEG Installation"$RESET
 echo " "
 sleep 2
 
-scl enable devtoolset-7 bash
+#scl enable devtoolset-7 bash
 #Install FFMPEG
 cd ${CHAN_DIR}
-git clone --depth 1 git://source.ffmpeg.org/ffmpeg
+# git clone --depth 1 git://source.ffmpeg.org/ffmpeg
+curl -O -L https://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2
+tar xjvf ffmpeg-snapshot.tar.bz2
 cd ffmpeg
 export TMPDIR=${TMP_DIR}
 mkdir -p $TMPDIR
@@ -568,8 +519,8 @@ PKG_CONFIG_PATH="${DEST_DIR}/lib/pkgconfig" ./configure --prefix="${DEST_DIR}" -
 make
 make install
 make distclean
-#hash -d ffmpeg
-ldconfig
+hash -d ffmpeg
+#ldconfig
 echo " "
 echo -e $YELLOW"FFMPEG Installation Completed"$RESET
 echo " "
@@ -655,7 +606,6 @@ NASM_INSTALL
 YASM_INSTALL
 X264_INSTALL
 X265_INSTALL
-#AOM_INSTALL
 FDKACC_INSTALL
 MP3LAME_INSTALL
 OPUS_INSTALL
@@ -663,8 +613,7 @@ LIBOGG_INSTALL
 LIBVORBIS_INSTALL
 LIBVPX_INSTALL
 LIBTHEORA_INSTALL
-LIBASS_INSTALL
-#ZIMG_INSTALL
+LIBASS_INSTALL 
 FFMPEG_INSTALL
 QTFASTSTART_INSTALL
 YOUTUBEDL_INSTALL
